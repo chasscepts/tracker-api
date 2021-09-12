@@ -1,0 +1,29 @@
+{
+  "name": "tracker-api",
+  "version": "1.0.0",
+  "description": "An API for tracking select daily tasks",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "stylelint": "^13.13.1",
+    "stylelint-config-standard": "^21.0.0",
+    "stylelint-csstree-validator": "^1.9.0",
+    "stylelint-scss": "^3.20.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "rspec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chasscepts/tracker-api.git"
+  },
+  "author": "Obetta Francis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chasscepts/tracker-api/issues"
+  },
+  "homepage": "https://github.com/chasscepts/tracker-api#readme"
+}
