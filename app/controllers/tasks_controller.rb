@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :update, :destroy]
+  before_action :set_task, only: [:show, :update, :destroy, :entries]
 
   def index
     @tasks = Task.all.includes(:group)
@@ -23,6 +23,11 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     head :no_content
+  end
+
+  def entries
+    @entries = @task.entries
+    json_response(@entries)
   end
 
   private
