@@ -1,4 +1,4 @@
-class EntriesController < ApplicationController
+class EntriesController < ApiController
   before_action :set_entry, only: [:show, :update, :destroy]
 
   def index

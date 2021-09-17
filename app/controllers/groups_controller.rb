@@ -1,4 +1,4 @@
-class GroupsController < ApplicationController
+class GroupsController < ApiController
   before_action :set_group, only: [:show, :update, :destroy]
 
   def index
