@@ -4,13 +4,13 @@ Rails.application.routes.draw do
     path: '/auth',
     path_names: { sign_in: '', sign_out: 'logout', registration: 'register' }
 
-  resources :groups
-
-  resources :tasks do
-    member do
-      get :entries
-    end
+  resources :groups, only: [:index, :show] do
+    resources :tasks, only: [:create]
   end
 
-  resources :entries, only: [:index, :show, :update, :destroy]
+  resources :tasks, only: [:update, :delete, :show, :index, :destroy]
+
+  resources :entries, only: [:update, :destroy]
+
+  get '/groups/:group_id/tasks' => 'tasks#for_group'
 end
