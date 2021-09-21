@@ -84,4 +84,5 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.include RequestSpecHelper, type: :request
+  config.include SeedDbHelper, type: :request
 end

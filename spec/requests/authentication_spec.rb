@@ -1,35 +1,32 @@
 require 'rails_helper'
 
 RSpec.describe "Authentication", type: :request do
-  let!(:groups) { create_list(:group, 3) }
-  let(:group_id) { groups.first.id }
+  let(:user) { create(:user) }
+  let(:token) { token_generator(user.id) }
 
-  describe 'POST /auth' do
-    let(:valid_attributes) { { email: 'test@example.com', password: 'qqqqqq' } }
+  context 'authenticates user with valid credential' do
+    let(:valid_attributes) { { email: user.email, password: user.password } }
+    before { post '/auth', params: valid_attributes }
 
-    context 'when the request is valid' do
-      before { post '/auth', params: valid_attributes }
-
-      it 'creates a group' do
-        expect(json['title']).to eq('Test Group')
-      end
-
-      it 'returns status code 201' do
-        expect(response).to have_http_status(201)
-      end
+    it 'returns user email in response' do
+      expect(json['user']['email']).to eq(user.email)
     end
 
-    context 'when the request is invalid' do
-      before { post '/groups', params: { } }
+    it 'returns user token in password' do
+      expect(json['user']['token']).to eq(token)
+    end
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
+    it 'returns status code 201' do
+      expect(response).to have_http_status(201)
+    end
+  end
 
-      it 'returns a validation failure message' do
-        expect(response.body)
-          .to match(/Validation failed: Title can't be blank/)
-      end
+  context 'fails when credentials are invalid' do
+    let(:invalid_attributes) { { email: user.email, password: "#{user.password}invalid" } }
+    before { post '/auth', params: invalid_attributes }
+
+    it 'returns status code 401' do
+      expect(response).to have_http_status(401)
     end
   end
 end

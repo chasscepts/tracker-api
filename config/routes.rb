@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     path: '/auth',
     path_names: { sign_in: '', sign_out: 'logout', registration: 'register' }
 
-  resources :groups, only: [:index, :show] do
+  resources :groups do
     resources :tasks, only: [:create]
   end
 

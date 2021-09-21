@@ -10,7 +10,7 @@ class AuthenticationController < ApiController
           email: user.email,
           token: JsonWebToken.encode(sub: user.id)
         }
-      })
+      }, :created)
     else
       json_response({ message: 'Wrong Email or password' }, :unauthorized)
     end

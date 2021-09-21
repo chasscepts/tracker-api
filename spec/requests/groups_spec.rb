@@ -1,11 +1,14 @@
 require 'rails_helper'
+require 'json'
 
 RSpec.describe "Groups", type: :request do
+  let(:user) { create(:user) }
+  let(:headers) { valid_headers }
   let!(:groups) { create_list(:group, 3) }
   let(:group_id) { groups.first.id }
 
   describe 'GET /groups' do
-    before { get '/groups' }
+    before { get '/groups', headers: headers }
 
     it 'returns groups' do
       expect(json).not_to be_empty
@@ -18,7 +21,7 @@ RSpec.describe "Groups", type: :request do
   end
 
   describe 'GET /groups/:id' do
-    before { get "/groups/#{group_id}" }
+    before { get "/groups/#{group_id}", headers: headers }
 
     context 'when the record exists' do
       it 'returns the group' do
@@ -48,7 +51,7 @@ RSpec.describe "Groups", type: :request do
     let(:valid_attributes) { { title: 'Test Group' } }
 
     context 'when the request is valid' do
-      before { post '/groups', params: valid_attributes }
+      before { post '/groups', params: valid_attributes.to_json, headers: headers }
 
       it 'creates a group' do
         expect(json['title']).to eq('Test Group')
@@ -60,7 +63,7 @@ RSpec.describe "Groups", type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/groups', params: { } }
+      before { post '/groups', params: { }, headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -77,7 +80,7 @@ RSpec.describe "Groups", type: :request do
     let(:valid_attributes) { { title: 'Shopping' } }
 
     context 'when the record exists' do
-      before { put "/groups/#{group_id}", params: valid_attributes }
+      before { put "/groups/#{group_id}", params: valid_attributes.to_json, headers: headers }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -90,7 +93,7 @@ RSpec.describe "Groups", type: :request do
   end
 
   describe 'DELETE /groups/:id' do
-    before { delete "/groups/#{group_id}" }
+    before { delete "/groups/#{group_id}", headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

@@ -5,9 +5,9 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.new(sign_up_params)
     if @user.save
       init_user_tasks
-      render json: @user
+      json_response(@user, :created)
     else
-      json_response({ message: 'Email has already been taken' }, :unauthorized)
+      json_response({ message: 'Email has already been taken' }, :unprocessable_entity)
     end
   end
 
@@ -19,7 +19,9 @@ class RegistrationsController < Devise::RegistrationsController
 
   def init_user_tasks
     time = Time.now.utc
-    tasks = DefaultTask.all.reduce([]) { |accm, t| accm << { title: t.title, user_id: @user.id, group_id: t.group_id, created_at: time, updated_at: time } }
+    tasks = DefaultTask.all.reduce([]) do |accm, t|
+      accm << { title: t.title, user_id: @user.id, group_id: t.group_id, created_at: time, updated_at: time }
+    end
     Task.insert_all(tasks)
   end
 end
