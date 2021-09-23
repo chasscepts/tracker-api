@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'json'
 
-RSpec.describe "Groups", type: :request do
+RSpec.describe 'Groups', type: :request do
   let(:user) { create(:user) }
   let(:headers) { valid_headers }
   let!(:groups) { create_list(:group, 3) }
@@ -63,7 +63,7 @@ RSpec.describe "Groups", type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/groups', params: { }, headers: headers }
+      before { post '/groups', params: {}, headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)

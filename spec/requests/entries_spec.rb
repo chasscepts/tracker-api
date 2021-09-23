@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'json'
 
-RSpec.describe "Entry", type: :request do
+RSpec.describe 'Entry', type: :request do
   let(:user) { create(:user) }
   let(:headers) { valid_headers }
   let!(:group) { create(:group) }

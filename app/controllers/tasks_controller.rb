@@ -1,11 +1,13 @@
 class TasksController < ApiController
-  before_action :set_task, only: [:show, :update, :destroy]
+  before_action :set_task, only: %i[show update destroy]
 
   def index
     create_entries_for_today
     modified = @tasks.map do |task|
       hashed = task.attributes
-      hashed[:entries] = task.entries.where(entries_query).order(entry_date: :desc).map { |entry| entry_attributes(entry) }
+      hashed[:entries] = task.entries.where(entries_query).order(entry_date: :desc).map do |entry|
+        entry_attributes(entry)
+      end
       hashed
     end
     json_response(modified)
@@ -13,7 +15,7 @@ class TasksController < ApiController
 
   def create
     task = current_user.tasks.create!(task_params)
-    entry = task.entries.create!({ entry_date: today });
+    entry = task.entries.create!({ entry_date: today })
     param = task.attributes
     param[:entries] = [entry_attributes(entry)]
     json_response(param, :created)
@@ -33,7 +35,9 @@ class TasksController < ApiController
     create_entries_for_today
     task = current_user.tasks.find(params[:id])
     hashed = task.attributes
-    hashed[:entries] = task.entries.where(entries_query).order(entry_date: :desc).map { |entry| entry_attributes(entry) }
+    hashed[:entries] = task.entries.where(entries_query).order(entry_date: :desc).map do |entry|
+      entry_attributes(entry)
+    end
     json_response(hashed)
   end
 
@@ -42,16 +46,18 @@ class TasksController < ApiController
     tasks = current_user.tasks.where(group_id: params[:group_id])
     modified = tasks.map do |task|
       hashed = task.attributes
-      hashed[:entries] = task.entries.where(entries_query).order(entry_date: :desc).map { |entry| entry_attributes(entry) }
+      hashed[:entries] = task.entries.where(entries_query).order(entry_date: :desc).map do |entry|
+        entry_attributes(entry)
+      end
       hashed
     end
     json_response(modified)
   end
 
   private
-  
+
   def task_params
-    params.permit([:title, :group_id])
+    params.permit(%i[title group_id])
   end
 
   def update_params
@@ -64,6 +70,7 @@ class TasksController < ApiController
 
   def entry_attributes(entry)
     return nil unless entry
+
     { id: entry.id, entry_date: entry.entry_date, task_id: entry.task_id, duration: entry.duration }
   end
 
@@ -88,10 +95,10 @@ class TasksController < ApiController
   def create_entries_for_today
     @tasks = current_user.tasks
     entries = Entry.where({ task_id: @tasks.map(&:id), entry_date: today })
-    if entries.size.zero?
-      time = Time.now.utc
-      params = @tasks.map { |t| { task_id: t.id, entry_date: today, created_at: time, updated_at: time  } }
-      Entry.insert_all(params)
-    end
+    return unless entries.size.zero?
+
+    time = Time.now.utc
+    params = @tasks.map { |t| { task_id: t.id, entry_date: today, created_at: time, updated_at: time } }
+    Entry.insert_all(params)
   end
 end

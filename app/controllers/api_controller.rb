@@ -3,6 +3,7 @@ class ApiController < ApplicationController
   before_action :authenticate_user!
 
   private
+
   def set_default_format
     request.format = :json
   end

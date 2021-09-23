@@ -5,12 +5,13 @@ class AuthenticationController < ApiController
     user = User.find_by(email: params[:email])
     if user&.valid_password?(params[:password])
       json_response({
-        user: {
-          id: user.id,
-          email: user.email,
-          token: JsonWebToken.encode(sub: user.id)
-        }
-      }, :created)
+                      user:
+                      {
+                        id: user.id,
+                        email: user.email,
+                        token: JsonWebToken.encode(sub: user.id)
+                      }
+                    }, :created)
     else
       json_response({ message: 'Wrong Email or password' }, :unauthorized)
     end

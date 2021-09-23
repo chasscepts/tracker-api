@@ -1,5 +1,5 @@
 class EntriesController < ApiController
-  before_action :set_entry, only: [:show, :update, :destroy]
+  before_action :set_entry, only: %i[show update destroy]
 
   def index
     @entries = entries_for_today
@@ -27,7 +27,7 @@ class EntriesController < ApiController
   private
 
   def entry_params
-    params.require(:entry).permit(%i[entry_date, duration])
+    params.require(:entry).permit(%i[entry_date duration])
   end
 
   def set_entry

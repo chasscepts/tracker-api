@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Authentication", type: :request do
+RSpec.describe 'Authentication', type: :request do
   let(:user) { create(:user) }
   let(:token) { token_generator(user.id) }
 
